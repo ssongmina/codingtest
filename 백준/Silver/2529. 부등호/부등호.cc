@@ -2,67 +2,51 @@
 
 using namespace std;
 
-int n;
-char arr[10];	
-int num[10];
-vector<int> v;
-vector<vector<int>> vList;
+int k;
+int numb[13];
+char arr[13];
+vector<string> v;
 
-void go(int cnt, int idx){
-	if(cnt == n+1){
-		vList.push_back(v);
-		return;
+bool cmp(string a, string b){
+	if(a.size() == b.size()) return a < b;
+	return a.size() < b.size();
+}
+
+bool check(char a, char c, char b){
+	if(c == '>') return a > b;
+	else if(c == '<') return a < b;
+	return false;
+}
+
+void go(string num, int idx){
+	if(idx == k+1){
+		v.push_back(num);
+		return ;
 	}
-	
 	for(int i=0; i<10; i++){
-		if(num[i])	continue;
-		char c = arr[idx];
-		if(c == '<'){
-			if(v.at(idx) < i){
-				v.push_back(i);
-				num[i] = 1;
-				go(cnt+1, idx+1);
-				num[i] = 0;
-				v.pop_back();
-			}
-		}
-		else if(c == '>'){
-			if(v.at(idx) > i){
-				v.push_back(i);
-				num[i] = 1;
-				go(cnt+1, idx+1);
-				num[i] = 0;
-				v.pop_back();
-			}
+		// 해당 숫자 사용했는지 확인
+		if(numb[i]) continue;
+		
+		// 부등호 기호에 알맞는 숫자인지
+		if(idx == 0 || check(num[idx-1], arr[idx-1], i+'0')){
+			numb[i] = 1;
+			go(num+to_string(i), idx+1);
+			numb[i] = 0;
 		}
 	}
-	return;
+	return ;
 }
 
 int main(){
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 	
-	cin >> n;
-	for(int i=0; i<n; i++){
-		cin >> arr[i];
-	}
+	cin >> k;
+	for(int i=0; i<k; i++) cin >> arr[i];
+
+	go("",0);
 	
-	for(int i=0; i<10; i++){
-		v.push_back(i);
-		num[i] = 1;
-		go(1,0);
-		num[i] = 0;
-		v.pop_back();
-	}
-	
-	sort(vList.begin(), vList.end());
-	auto it = vList.back();
-	for(int a : it) cout << a;
-	cout << "\n";
-	it = vList.front();
-	for(int a : it) cout << a;
-	cout << "\n";
-//	cout << vList.back() << "\n" << vList.first() << "\n";
-	
+	sort(v.begin(), v.end(), cmp);
+	cout << v[v.size()-1] << "\n" << v[0] << "\n";
+	return 0;
 }
