@@ -2,25 +2,43 @@
 
 using namespace std;
 
-char c;
-string tmp1, tmp2, str;
+string str, ss;
+stack<char> stk;
 
 int main(){
 	ios_base::sync_with_stdio(false);
 	cin.tie(NULL); cout.tie(NULL);
 	
-	cin >> tmp1 >> tmp2;
-		
-	c = tmp2[tmp2.size()-1];
-	for(int i=0; i<tmp1.size(); i++){
-		str += tmp1[i];
-		if(str.size() >= tmp2.size() && tmp1[i] == c){
-			string ss = str.substr(str.size()-tmp2.size());
-			if(ss == tmp2) str.erase(str.size()-tmp2.size(), tmp2.size());
+	cin >> str >> ss;
+	char c = ss[ss.size()-1];
+	
+	for(int i=0; i<str.size(); i++){
+		if(c != str[i]) stk.push(str[i]);
+		else{
+			if(stk.size() < ss.size()-1){
+				stk.push(str[i]);
+				continue; 
+			}
+			string tmp = "";
+			for(int i=0; i<ss.size()-1; i++){
+				tmp += stk.top();
+				stk.pop();
+			}
+			reverse(tmp.begin(), tmp.end());
+			tmp += c;
+			if(tmp == ss) continue;
+			for(int i=0; i<tmp.size(); i++) stk.push(tmp[i]);	
 		}
 	}
 	
-	if(str.size()) cout << str << "\n";
+	string tmp = "";
+	while(stk.size()){
+		tmp += stk.top();
+		stk.pop();
+	}
+	reverse(tmp.begin(), tmp.end());
+	if(tmp.size()) cout << tmp << "\n";
 	else cout << "FRULA\n";
+	
 	return 0;
 }
