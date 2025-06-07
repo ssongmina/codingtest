@@ -2,7 +2,7 @@
 
 using namespace std;
 
-int n,x,l,r,cnt;
+int n,x;
 vector<int> v;
 
 int main(){
@@ -15,16 +15,20 @@ int main(){
 		v.push_back(x);
 	}
 	cin >> x;
-	
-	l = 0,r = n-1;
 	sort(v.begin(), v.end());
 	
-	while(l<r){
-		if(v[l] + v[r] == x) r--,cnt++;
-		else if(v[l] + v[r] < x) l++;
-		else r--;
+	int i=0,j=v.size()-1;
+	int cnt = 0;
+	while(i < j){
+		if(v[i] + v[j] == x){
+			cnt++;
+			i++, j--;
+		}
+		else if(v[i] + v[j] < x) i++;
+		else j--;
 	}
-	
 	cout << cnt << "\n";
+	
+	
 	return 0;
 }
