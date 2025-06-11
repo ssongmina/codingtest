@@ -1,38 +1,32 @@
-#include <cstdio>
-#include <cstring>
-#include <algorithm>
-#include <iostream>
-#include <unordered_map>
-using namespace std; 
-typedef pair<int, int> P;
-P L[1000004];
-int n, from, to, l, r, ret; 
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int n;
+long long x,y;
+vector<pair<long long, long long>> v;
+
 int main(){
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
-    cout.tie(NULL); 
-    cin >> n; 
-    for(int i = 0; i < n; i++){ 
-        cin >> from >> to;
-        L[i] = P(from, to);
-    }
-    sort(L, L + n); 
-    l = L[0].first; r = L[0].second; 
-    for(int i = 1; i < n; i++){ 
-        if(r < L[i].first){ 
-            ret += (r - l); 
-            l = L[i].first;
-            r = L[i].second;
-        }else if(L[i].first <= r && L[i].second >= r){ 
-            r = L[i].second;
-        }
-    }
-    ret += r - l;
-    cout << ret << '\n';
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL); cout.tie(NULL);
+	
+	cin >> n;
+	for(int i=0; i<n; i++){
+		cin >> x >> y;
+		v.push_back({x,y});
+	}
+	
+	sort(v.begin(), v.end());
+
+	long long last = -1000000005;
+	long long cnt = 0;
+	for(auto a : v){
+		if(last <= a.first) cnt += a.second - a.first;
+		else if(a.second > last) cnt += a.second - last;
+		last = max(last, a.second);
+	}
+	
+	cout << cnt << "\n";
+	
+	return 0;
 }
-/*
-3
-1 5
-2 4
-3 4 
-*/
