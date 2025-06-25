@@ -1,48 +1,40 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <map>
+#include <queue>
 using namespace std;
 
 int a, b, c, d;
-int visited[1001][1001]; // [a][b] 최대 용량은 1000 이하
+map< pair<int, int>,int > m;
+queue<pair<int, int>> q;
 
-struct State {
-    int x, y, cnt;
-};
+void enqueue(int x,int y,int d) { 
+    if (m[{x, y}]) return; 
+    m[{x, y}] = d+1;
+    q.push({ x,y });
+}
 
-int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
-
-    cin >> a >> b >> c >> d;
-
-    queue<State> q;
-    q.push({0, 0, 0});
-    visited[0][0] = 1;
-
+int bfs(int x, int y) {
+    m[{x, y}] = 1;
+    q.push({ x,y });
     while (!q.empty()) {
-        auto [x, y, cnt] = q.front(); q.pop();
-        
-        if (x == c && y == d) {
-            cout << cnt << '\n';
-            return 0;
-        }
+        x = q.front().first;
+        y = q.front().second;
+        q.pop();
 
-        vector<pair<int, int>> nextStates = {
-            {a, y},     // x 채우기
-            {x, b},     // y 채우기
-            {0, y},     // x 비우기
-            {x, 0},     // y 비우기
-            {min(x + y, a), max(0, x + y - a)}, // y -> x
-            {max(0, x + y - b), min(x + y, b)}  // x -> y
-        };
-
-        for (auto [nx, ny] : nextStates) {
-            if (!visited[nx][ny]) {
-                visited[nx][ny] = 1;
-                q.push({nx, ny, cnt + 1});
-            }
-        }
+        enqueue(a, y, m[{x, y}]);
+        enqueue(x, b, m[{x, y}]);
+        enqueue(0, y, m[{x, y}]);
+        enqueue(x, 0, m[{x, y}]);
+		enqueue(min(x + y, a), max(0, x + y - a), m[{x, y}]);
+		enqueue(max(0, x + y - b), min(x + y, b), m[{x, y}]); 
     }
+    if (m[{c, d}]) return m[{c, d}]-1;
+    else return -1;
+}
 
-    cout << "-1\n"; // 불가능한 경우
-    return 0;
+int main()
+{
+    cin >> a >> b >> c >> d;
+    
+    cout<<bfs(0, 0);
 }
