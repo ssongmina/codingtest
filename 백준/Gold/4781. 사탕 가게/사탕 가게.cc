@@ -2,37 +2,31 @@
 
 using namespace std;
 
-int n,c;
-double m,p;
+int n,m1,m2,a,b1,b2,b,m;
 vector<pair<int,int>> v;
 int dp[10005];
 
 int main(){
-	ios_base::sync_with_stdio(false);
-	cin.tie(NULL); cout.tie(NULL);
 	
 	while(true){
+		scanf("%d %d.%d", &n, &m1, &m2);
+		if(n == 0 && m1 == 0 && m2 == 0) break;
 		v.clear();
-		fill(dp, dp+10005, 0);
-		
-		cin >> n >> m;
-		if(n == 0 && m == 0.00) break;
-		int k = static_cast<int>(m*100 + 0.5);
-		int pp;
+		m = m1*100 + m2; // 상근이의 존
 		for(int i=0; i<n; i++){
-			cin >> c >> p;  // 칼로리, 가격 
-			pp = static_cast<int>(p*100 + 0.5);
-			v.push_back({c,pp});
-		}
-		
-		for(auto a : v){   // 칼로리, 가격 
-			for(int i=a.second; i<=k; i++){
-				dp[i] = max(dp[i], dp[i-a.second]+a.first);
+			scanf("%d %d.%d", &a, &b1, &b2);
+			b = b1*100 + b2;
+			v.push_back({a,b});  // 칼로리, 가격 
+		}	
+		fill(dp, dp+10005, 0);
+		for(auto k : v){
+			for(int i=k.second; i<=m; i++){
+				dp[i] = max(dp[i], dp[i-k.second] + k.first);
 			}
 		}
-		
-		cout << dp[k] << "\n";
+		cout << dp[m] << "\n";
 	}
+	
 	
 	
 	return 0;
